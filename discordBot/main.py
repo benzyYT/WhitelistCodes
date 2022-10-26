@@ -28,7 +28,7 @@ TOKEN = vars["TOKEN"]
 try:
     cnx = mysql.connector.connect(**config)
     cursor = cnx.cursor()
-    print("MySQL Connection Created Successfully")
+    print("MySQL connection established")
 except Exception as e:
     print("Error at:")
     print(e)
