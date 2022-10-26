@@ -30,3 +30,16 @@
 <p>benzyYT       | Rewrote complete code to make it work the way I want it. Before I rewrote it, it was a standard password script with no database queries or discord bot compatibility.</p>
 <p>Enfer         | Some bits of code.</p>
 <p>Frazzle       | Basically 100% of the code that makes the passwords work (https://gist.github.com/FrazzIe/f59813c137496cd94657e6de909775aa)</p>
+<br><br><hr><br><br>
+<h1>REQUIREMENTS</h1>
+<p>I did everything on Linux, so I don't guarantee functionality on other operating systems, but actually it <b>should</b> work on other operating systems as well.</p>
+<ul>
+  <li>FiveM Server with oxmysql</li>
+  <li>Python3 installed</li>
+  <br><b>PIP PACKAGES:</p>
+  <li>discord.py</li>
+  <li>python-dotenv</li>
+  <li>python-dotenv</li>
+  <li>mysql-connector-python</li>
+</ul>
+<p>I may have forgotten a pip package or 2, but these are the most important.</p>
