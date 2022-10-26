@@ -36,7 +36,6 @@ AddEventHandler("playerConnecting", function(name)
 			
 		if string.sub(v, 1, string.len("license:")) == "license:" then
 			license = v
-			print(v:gsub('%license:', ''))
 			dt_coc = v:gsub('%license:', '')
 		end
 	end
@@ -117,12 +116,9 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 		
 		local cres = MySQL.scalar.await('SELECT 1 FROM codeswhitelist WHERE identifier = ?', { dt_coc })
 		
-		print('PleaseWait')
 		if cres then
-			print('Deferrals.done')
 			deferrals.done()
 		else
-			print('showPasswordCard')
 			showPasswordCard(player, deferrals, passwordCardCallback)
 		end
 	end
