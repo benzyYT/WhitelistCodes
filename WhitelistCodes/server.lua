@@ -5,30 +5,21 @@
 
 
 
--- Config
+
 Config = {}
-Config.UseAllowlist	= false								-- Keep the COMPLETE Config as it is it will destroy the script, I will delete the config later, as it is from the script from before.
-Config.UsePassword	= true								-- Keep the COMPLETE Config as it is it will destroy the script, I will delete the config later, as it is from the script from before.
-Config.Password		= "ThisDoesNotMatter"				-- Keep the COMPLETE Config as it is it will destroy the script, I will delete the config later, as it is from the script from before.
-Config.Attempts		= 3									-- Keep the COMPLETE Config as it is it will destroy the script, I will delete the config later, as it is from the script from before.
-Config.CleverMode	= false								-- Keep the COMPLETE Config as it is it will destroy the script, I will delete the config later, as it is from the script from before.
-Config.DiscordLink	= "ThisDoesNotChangeAnything"		-- Keep the COMPLETE Config as it is it will destroy the script, I will delete the config later, as it is from the script from before.
-Config.DeferralWait	= 0.5								-- This defines the time the user has to wait but it doesn't work out very well!
-Config.Allowlist	= {}
+Config.Active	= true								-- Whether the system should be on
+Config.Attempts		= 3								-- How many attempts the player has
+Config.DeferralWait	= 0.5							-- This defines the time the user has to wait but it doesn't work out very well! (TODO: Fix this)
 
 
 
--- Globals
+
 local lastDeferral = {}
 local attempts = {}
-local passwordCard = {["type"]="AdaptiveCard",["$schema"]="http://adaptivecards.io/schemas/adaptive-card.json",["version"]="1.5",["body"]={{["type"]="Container",["items"]={{["type"]="TextBlock",["text"]="Password",["wrap"]=true},{["type"]="Input.Text",["placeholder"]="Whitelistcode eingeben",["style"]="Password",["id"]="password"},{["type"]="Container",["isVisible"]=false,["items"]={{["type"]="TextBlock",["text"]="Ungültiger Code",["wrap"]=true,["weight"]="Bolder"}}}}},{["type"]="ActionSet",["actions"]={{["type"]="Action.Submit",["title"]="Fertig"}}}}}
+local passwordCard = {["type"]="AdaptiveCard",["$schema"]="http://adaptivecards.io/schemas/adaptive-card.json",["version"]="1.5",["body"]={{["type"]="Container",["items"]={{["type"]="TextBlock",["text"]="Whitelist Code",["wrap"]=true},{["type"]="Input.Text",["placeholder"]="Whitelistcode eingeben",["style"]="Password",["id"]="password"},{["type"]="Container",["isVisible"]=false,["items"]={{["type"]="TextBlock",["text"]="Ungültiger Code",["wrap"]=true,["weight"]="Bolder"}}}}},{["type"]="ActionSet",["actions"]={{["type"]="Action.Submit",["title"]="Fertig"}}}}}
 
-local steamid  = false
 local license  = false
-local discord  = false
-local xbl      = false
-local liveid   = false
-local ip       = false
+
 
 
 AddEventHandler("playerConnecting", function(name)
@@ -43,10 +34,10 @@ end)
 
 
 
--- Main logic. Too lazy to make it more efficient and I'm certainly not going to change code that already works.
+
 AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 
-	-- Locals
+
 	local player = source
 	local identifiers = GetPlayerIdentifiers(player)
 	local identifiersNum = #GetPlayerIdentifiers(player)
@@ -54,16 +45,16 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 	local newInfo = ""
 	local oldInfo = ""
 
-	-- Skip all checks if nothing is enabled (TODO: Check if this works or if deferrals.done() is required.)
-	if not Config.UseAllowlist and not Config.UsePassword and not Config.CleverMode then
+
+	if not Config.Active then
 		return
 	end
 
-	-- Stopping user from joining
+
 	deferrals.defer()
 	lastDeferral["id" .. player] = os.clock()
 
-	-- Updating deferral message to "Please wait..."
+
 	while lastDeferral["id" .. player] + Config.DeferralWait > os.clock() do
 		Citizen.Wait(10)
 	end
@@ -71,8 +62,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 	lastDeferral["id" .. player] = os.clock()
 
 
-	-- Password only
-	if not Config.UseAllowlist and Config.UsePassword and not Config.CleverMode then
+	if Config.Active then
 		local function passwordCardCallback(data, rawData)
 			local match = false
 
@@ -111,9 +101,6 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
 			end
 		end
 		
-		
-		
-		
 		local cres = MySQL.scalar.await('SELECT 1 FROM codeswhitelist WHERE identifier = ?', { dt_coc })
 		
 		if cres then
@@ -126,10 +113,6 @@ end)
 			
 		
 
-
-
-
--- Function to show the password card
 function showPasswordCard(player, deferrals, callback, showError, numAttempts)
 	local card = passwordCard
 	card.body[1].items[3].isVisible = showError and true or false
