@@ -7,7 +7,7 @@
 
 
 Config = {}
-Config.Active	= true								-- Whether the system should be on
+Config.Active	    = true							-- Whether the system should be on
 Config.Attempts		= 3								-- How many attempts the player has
 Config.DeferralWait	= 0.5							-- This defines the time the user has to wait but it doesn't work out very well! (TODO: Fix this)
 
